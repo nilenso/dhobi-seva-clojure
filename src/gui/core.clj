@@ -40,7 +40,7 @@
 
         [(text :columns 20 :id :course-name :font {:size 20}) :grid :next]
 
-        [(label :text "Start Date:" :halign :center :font {:size 20}) :gridheight 1 :grid :wrap]
+        [(label :text "Start Date (YYYY-MM-DD):" :halign :center :font {:size 20}) :gridheight 1 :grid :wrap]
 
         [(text :columns 20 :id :start-date :font {:size 20}) :grid :next :weightx 1.0]
 
