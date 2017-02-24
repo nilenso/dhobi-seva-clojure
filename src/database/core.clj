@@ -11,41 +11,10 @@
 
 (defn add-Course
     [coursename start duration]
-    (let [thiscourse {"start" start,
+    (let [this-course {"start" start,
                       "duration" duration,
                       "students" {}}]
-        (swap! course assoc-in [coursename] thiscourse)))
-
-
-(defn add-Student
-    [id studentname age gender deposit roomNo]
-    (let [student {"age" age,
-                   "gender" gender,
-                   "deposit" deposit,
-                   "roomNo" roomNo,
-                   "transactions" []}]
-        (swap! course assoc-in [id "students" studentname] student)))
-
-
-(defn add-Transaction
-    [id studentName desc quantity rate date]
-    (let [transaction {"desc" desc,
-                       "quantity" quantity,
-                       "rate" rate,
-                       "total" (* quantity rate),
-                       "date" date}
-          length (count (get-in @course [id "students" studentName "transactions"]))]
-    (swap! course assoc-in [id "students" studentName "transactions" length] transaction)))
-
-
-(defn update-Deposit
-    [id studentName amount]
-    (swap! course update-in [id "students" studentName "deposit"] + amount))
-
-
-(defn save
-    []
-    (spit file-path (json/write-str @course)))
+        (swap! course assoc-in [coursename] this-course)))
 
 
 (defn main
