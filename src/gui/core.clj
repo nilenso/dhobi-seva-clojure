@@ -91,30 +91,7 @@
                                   :listen [:action (fn [e] (handler-add-student course-name))]) :grid :next :weightx 1.0]]))
 
 
-;(defn -main []
-;  (database/main)
-;  (-> (main-screen-frame)
-;    show!))
-
-
-(defn window1 [content]
-  (frame
-    :title "Resturant Selector"
-    :content content
-    :width 200
-    :height 50
-    :on-close :close))
-
-(defn -main
-  []
-  (let [rating-label (label :text "Please choose rating:")
-        rating (combobox :model ["1 star" "2 star"])
-        location (slider
-                   :value 5 :min 0 :max 20
-                   :minor-tick-spacing 1 :major-tick-spacing 2
-                   :snap-to-ticks? true
-                   :paint-ticks? true :paint-labels? true)
-
-        main-window (window1 (vertical-panel :items [rating-label rating location]))]
-    (-> main-window
-        show!)))
+(defn -main []
+  (database/main)
+  (-> (main-screen-frame)
+    show!))
