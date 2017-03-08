@@ -6,18 +6,18 @@
 
 (declare save)
 
-(def course (atom {}))
+(def all-course-data (atom {}))
 (def file-path "data.json")
 
-(defn add-Course
+(defn add-course
     [coursename start duration]
     (let [this-course {"start" start,
                       "duration" duration,
                       "students" {}}]
-        (swap! course assoc-in [coursename] this-course)))
+        (swap! all-course-data assoc-in [coursename] this-course)))
 
 
 (defn main
     []
     (if (.exists (io/as-file file-path))
-        (reset! course (json/read-str (slurp file-path)))))
+        (reset! all-course-data (json/read-str (slurp file-path)))))
