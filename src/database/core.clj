@@ -6,28 +6,18 @@
 
 (declare save)
 
-(def course (atom {}))
+(def all-course-data (atom {}))
 (def file-path "data.json")
 
 
-(defn add-Course
-    [coursename start duration]
-    (let [this-course {"start" start,
-                      "duration" duration,
-                      "students" {}}]
-        (swap! course assoc-in [coursename] this-course)))
-
-
-(defn add-Student
-    [course-name student-name roomNo seatNo]
-    (let [student {"room" roomNo,
-                   "seat" seatNo,
-                   "deposit" 0,
-                   "transactions" []}]
-        (swap! course assoc-in [course-name "students" student-name] student)))
+(defn course-list
+  []
+  (for [all-courses (keys @all-course-data)]
+      (let [course-data (get-in @all-course-data [all-courses])]
+          (hash-map :name all-courses, :date (get course-data "start"), :duration (get course-data "duration")))))
 
 
 (defn main
     []
     (if (.exists (io/as-file file-path))
-        (reset! course (json/read-str (slurp file-path)))))
+        (reset! all-course-data (json/read-str (slurp file-path)))))
