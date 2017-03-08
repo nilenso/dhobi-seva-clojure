@@ -2,6 +2,7 @@
   (:use [seesaw core])
   (:require [database.core :as database])
   (:require [validate.core :as validate])
+  (:require [clojure.string :as str])
   (:gen-class))
 
 (declare add-course-frame)
@@ -19,7 +20,7 @@
 
 (defn handler-add-course [event]
     (let [data (value (select f [:#add-course-form]))
-          course-name (:course-name data)
+          course-name (str/trim (:course-name data))
           start-date  (:start-date data)
           duration    (:duration data)]
      (cond
@@ -33,25 +34,26 @@
 
 
 (defn add-course-frame []
-    (form-panel :id :add-course-form
-      :items [
-        [nil :fill :both :insets (java.awt.Insets. 5 5 5 5) :gridx 0 :gridy 0]
-
-        [(label :text "Course Name:" :halign :center :font {:size 20})]
-
-        [(text :columns 20 :id :course-name :font {:size 20}) :grid :next]
-
-        [(label :text "Start Date (YYYY-MM-DD):" :halign :center :font {:size 20}) :gridheight 1 :grid :wrap]
-
-        [(text :columns 20 :id :start-date :font {:size 20}) :grid :next :weightx 1.0]
-
-        [(label :text "Duration:" :halign :center :font {:size 20}) :gridheight 1 :grid :wrap]
-
-        [(text :columns 20 :id :duration :font {:size 20}) :grid :next :weightx 1.0]
-
-        [[1 :by 1] :grid :wrap]
-
-        [(button :id :add-course :text "Add Course" :font {:size 20} :listen [:action handler-add-course]) :grid :next :weightx 1.0]]))
+    (border-panel :vgap 150 :hgap 150
+        :north " "
+        :west  " "
+        :east  " "
+        :center (vertical-panel 
+                      :id :add-course-form
+                      :items [(label :text "Course Name:" :font {:size 20}) 
+                              (text :id :course-name :font {:size 20})
+                              " "
+                              (label :text "Start Date (YYYY-MM-DD):" :font {:size 20})
+                              (text :id :start-date :font {:size 20})  
+                              " "
+                              (label :text "Duration:" :font {:size 20})
+                              (text :id :duration :font {:size 20})
+                              " "
+                              (button :id :add-course 
+                                      :text "Add Course"
+                                      :halign :center 
+                                      :font {:size 20} 
+                                      :listen [:action handler-add-course])])))
 
 
 (defn -main []
