@@ -10,16 +10,15 @@
 
 
 (defn main-screen-frame []
-    (config! f :title "Vipasana"
-               :content (flow-panel
-                            :items [(button :id :goto-add-course
-                                             :text "Add Course"
-                                             :font {:size 20}
-                                             :listen [:action (fn [e] (config! f :title "Add Course" :content (add-course-frame)))])])))
+    (flow-panel
+      :items [(button :id :goto-add-course
+                      :text "Add Course"
+                      :font {:size 20}
+                      :listen [:action (fn [e] (config! f :title "Add Course" :content (add-course-frame)))])]))
 
 
 (defn handler-add-course [event]
-    (let [data (value (select f [:#form]))
+    (let [data (value (select f [:#add-course-form]))
           course-name (:course-name data)
           start-date  (:start-date data)
           duration    (:duration data)]
@@ -27,12 +26,14 @@
         (or (empty? course-name) (empty? start-date) (empty? duration)) (alert "Please enter all the fields")
         (not (validate/date-validator start-date)) (alert "Please enter date in the correct format")
         (not (validate/duration-validator duration)) (alert "Please enter correct duration")
-        :else (do (database/add-Course course-name start-date duration)
-                  (config! f :title "Add Student" :content (add-student-frame course-name))))))
+        (database/course-exists? course-name) (alert (str "Course with name " course-name " already exists"))
+        :else (do (database/add-course course-name start-date duration)
+                  (alert "Course added successfully")
+                  (config! f :title "Vipassana" :content (main-screen-frame))))))
 
 
 (defn add-course-frame []
-    (form-panel :id :form
+    (form-panel :id :add-course-form
       :items [
         [nil :fill :both :insets (java.awt.Insets. 5 5 5 5) :gridx 0 :gridy 0]
 
@@ -55,5 +56,6 @@
 
 (defn -main []
   (database/main)
-  (-> (main-screen-frame)
+  (-> (config! f :title "Vipassana"
+                 :content (main-screen-frame))
     show!))

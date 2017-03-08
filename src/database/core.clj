@@ -10,11 +10,16 @@
 (def file-path "data.json")
 
 (defn add-course
-    [coursename start duration]
+    [course-name start duration]
     (let [this-course {"start" start,
                       "duration" duration,
                       "students" {}}]
-        (swap! all-course-data assoc-in [coursename] this-course)))
+        (swap! all-course-data assoc-in [course-name] this-course)))
+
+
+(defn course-exists?
+    [course-name]
+      (get-in @all-course-data [course-name]))
 
 
 (defn main
