@@ -7,7 +7,8 @@
 
 (declare add-course-frame)
 (declare add-student-frame)
-(def f (frame :minimum-size [640 :by 480]))
+
+(def f (frame :size [800 :by 600] :resizable? false))
 
 
 (defn main-screen-frame []
