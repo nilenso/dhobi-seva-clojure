@@ -11,12 +11,27 @@
 (def f (frame :size [800 :by 600] :resizable? false))
 
 
-(defn main-screen-frame []
-    (flow-panel
-      :items [(button :id :goto-add-course
-                      :text "Add Course"
-                      :font {:size 20}
-                      :listen [:action (fn [e] (config! f :title "Add Course" :content (add-course-frame)))])]))
+(defn view-courses-frame
+  []
+  (border-panel :vgap 5 :border 5
+          :north (flow-panel
+                :items [(button :text "Add Course"
+                                :font {:size 20} 
+                                :listen [:action (fn [e] (config! f :title "Add Course" 
+                                                                    :content (add-course-frame)))])])
+          :center (scrollable (table
+                                :id :all-courses
+                                :selection-mode :single
+                                :font {:size 16}
+                                :model [:columns
+                                          [{:key :name, :text "Course Name"}
+                                           {:key :date, :text "Start Date"}
+                                           {:key :duration, :text "Duration"}]
+                                        :rows
+                                          (vec (reverse (sort-by :date (database/course-list))))]))
+          :south (flow-panel :items [(button 
+                                        :text "Select Course" 
+                                        :font {:size 20})]))) 
 
 
 (defn handler-add-course [event]
@@ -31,7 +46,8 @@
         (database/course-exists? course-name) (alert (str "Course with name " course-name " already exists"))
         :else (do (database/add-course course-name start-date duration)
                   (alert "Course added successfully")
-                  (config! f :title "Vipassana" :content (main-screen-frame))))))
+                  (config! f :title "Vipassana" 
+                             :content (view-courses-frame))))))
 
 
 (defn add-course-frame []
@@ -60,5 +76,5 @@
 (defn -main []
   (database/main)
   (-> (config! f :title "Vipassana"
-                 :content (main-screen-frame))
+                 :content (view-courses-frame))
     show!))
