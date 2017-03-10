@@ -22,6 +22,11 @@
       (get-in @all-course-data [course-name]))
 
 
+(defn student-exists?
+    [course-name student-name]
+    (get-in @all-course-data [course-name "students" student-name]))
+
+
 (defn course-list
   []
   (for [all-courses (keys @all-course-data)]
