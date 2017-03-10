@@ -1,5 +1,5 @@
 (ns gui.core
-  (:use [seesaw core])
+  (:use [seesaw core table])
   (:require [database.core :as database])
   (:require [validate.core :as validate])
   (:require [clojure.string :as str])
@@ -7,8 +7,19 @@
 
 (declare add-course-frame)
 (declare add-student-frame)
+(declare student-list-frame)
 
 (def f (frame :size [800 :by 600] :resizable? false))
+
+
+(defn handler-select-course [event]
+    (let [table (select f [:#all-courses])
+          data (value-at table (selection table))
+          course-name (:name data)]
+      (cond 
+        (empty? course-name) (alert "Please select a course")
+        :else (config! f :title "Student List" 
+                         :content (student-list-frame course-name)))))
 
 
 (defn view-courses-frame
@@ -31,7 +42,8 @@
                                           (vec (reverse (sort-by :date (database/course-list))))]))
           :south (flow-panel :items [(button 
                                         :text "Select Course" 
-                                        :font {:size 20})]))) 
+                                        :font {:size 20}
+                                        :listen [:action handler-select-course])]))) 
 
 
 (defn handler-add-course [event]
