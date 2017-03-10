@@ -17,6 +17,16 @@
         (swap! all-course-data assoc-in [course-name] this-course)))
 
 
+(defn add-student
+    [course-name student-name roomNo seatNo]
+    (let [student {"room" roomNo,
+                   "seat" seatNo,
+                   "deposit" 0,
+                   "purchases" [],
+                   "laundry" []}]
+        (swap! all-course-data assoc-in [course-name "students" student-name] student)))
+
+
 (defn course-exists?
     [course-name]
       (get-in @all-course-data [course-name]))
