@@ -1,5 +1,5 @@
 (ns gui.core
-  (:use [seesaw core])
+  (:use [seesaw core table])
   (:require [database.core :as database])
   (:require [validate.core :as validate])
   (:require [clojure.string :as str])
@@ -7,16 +7,43 @@
 
 (declare add-course-frame)
 (declare add-student-frame)
+(declare student-list-frame)
 
 (def f (frame :size [800 :by 600] :resizable? false))
 
 
-(defn main-screen-frame []
-    (flow-panel
-      :items [(button :id :goto-add-course
-                      :text "Add Course"
-                      :font {:size 20}
-                      :listen [:action (fn [e] (config! f :title "Add Course" :content (add-course-frame)))])]))
+(defn handler-select-course [event]
+    (let [table (select f [:#all-courses])
+          data (value-at table (selection table))
+          course-name (:name data)]
+      (cond 
+        (empty? course-name) (alert "Please select a course")
+        :else (config! f :title "Student List" 
+                         :content (student-list-frame course-name)))))
+
+
+(defn view-courses-frame
+  []
+  (border-panel :vgap 5 :border 5
+          :north (flow-panel
+                :items [(button :text "Add Course"
+                                :font {:size 20} 
+                                :listen [:action (fn [e] (config! f :title "Add Course" 
+                                                                    :content (add-course-frame)))])])
+          :center (scrollable (table
+                                :id :all-courses
+                                :selection-mode :single
+                                :font {:size 16}
+                                :model [:columns
+                                          [{:key :name, :text "Course Name"}
+                                           {:key :date, :text "Start Date"}
+                                           {:key :duration, :text "Duration"}]
+                                        :rows
+                                          (vec (reverse (sort-by :date (database/course-list))))]))
+          :south (flow-panel :items [(button 
+                                        :text "Select Course" 
+                                        :font {:size 20}
+                                        :listen [:action handler-select-course])]))) 
 
 
 (defn handler-add-course [event]
@@ -31,7 +58,8 @@
         (database/course-exists? course-name) (alert (str "Course with name " course-name " already exists"))
         :else (do (database/add-course course-name start-date duration)
                   (alert "Course added successfully")
-                  (config! f :title "Vipassana" :content (main-screen-frame))))))
+                  (config! f :title "Vipassana" 
+                             :content (view-courses-frame))))))
 
 
 (defn add-course-frame []
@@ -54,11 +82,17 @@
                                       :text "Add Course"
                                       :halign :center 
                                       :font {:size 20} 
-                                      :listen [:action handler-add-course])])))
+                                      :listen [:action handler-add-course])])
+        
+        :south (flow-panel :items [(button :text "Back" 
+                 :font {:size 20} 
+                 :size [200 :by 40]
+                 :listen [:action (fn [e] (config! f :title "Course List" 
+                                                     :content (view-courses-frame)))])])))
 
 
 (defn -main []
   (database/main)
   (-> (config! f :title "Vipassana"
-                 :content (main-screen-frame))
+                 :content (view-courses-frame))
     show!))

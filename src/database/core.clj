@@ -22,6 +22,13 @@
       (get-in @all-course-data [course-name]))
 
 
+(defn course-list
+  []
+  (for [all-courses (keys @all-course-data)]
+      (let [course-data (get-in @all-course-data [all-courses])]
+          (hash-map :name all-courses, :date (get course-data "start"), :duration (get course-data "duration")))))
+
+
 (defn main
     []
     (if (.exists (io/as-file file-path))
