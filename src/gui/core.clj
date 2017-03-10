@@ -111,7 +111,62 @@
                                            {:key :room, :text "Room No."}
                                            {:key :seat, :text "Seat No."}]
                                         :rows
-                                          (vec (database/student-list course-name))]))))
+                                          (vec (database/student-list course-name))]))
+                :south (flow-panel
+                            :items [(button :text "Add Student"
+                                             :font {:size 20}
+                                             :listen [:action (fn [e] 
+                                                                (config! f :title "Add Student" 
+                                                                           :content (add-student-frame course-name)))])])))
+
+
+(defn handler-add-student [course-name]
+    (let [data (value (select f [:#add-student-form]))
+          student-name (str/trim (:student-name data))
+          room         (str/trim (:room data))
+          seat         (str/trim (:seat data))]
+          (cond 
+            (validate/is-empty? student-name room seat) (alert "Please enter all the fields")
+            (database/student-exists? course-name student-name) (alert (str "Student with name " student-name " already exists"))
+            :else (do (database/add-student course-name student-name room seat)
+                  (alert "Student added successfully")
+                  (config! f :title "Student List" 
+                             :content (student-list-frame course-name))))))
+
+
+(defn add-student-frame [course-name]
+  (border-panel :vgap 150 :hgap 150
+        :north " "
+        :west  " "
+        :east  " "
+        :center
+            (vertical-panel 
+                      :id :add-student-form
+                      :items [(label :text "Student Name:" :font {:size 20}) 
+                              (text :id :student-name :font {:size 20})
+                              " "
+                              (label :text "Room" :font {:size 20})
+                              (text :id :room :font {:size 20})  
+                              " "
+                              (label :text "Seat:" :font {:size 20})
+                              (text :id :seat :font {:size 20})
+                              " "
+                              (button :id :add-student 
+                                      :text "Add Student" 
+                                      :font {:size 20}
+                                      :listen [:action (fn [e] (handler-add-student course-name))])])
+
+        :south (flow-panel :items [(button :text "Home" 
+                                           :font {:size 20} 
+                                           :size [150 :by 40]
+                                           :listen [:action (fn [e] (config! f :title "Course List" 
+                                                                               :content (view-courses-frame)))])
+                                   "  "
+                                   (button :text "Back" 
+                                           :font {:size 20} 
+                                           :size [150 :by 40]
+                                           :listen [:action (fn [e] (config! f :title "Student List" 
+                                                                               :content (student-list-frame course-name)))])])))
 
 
 (defn -main []
