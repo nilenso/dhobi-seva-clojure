@@ -120,6 +120,20 @@
                                                                            :content (add-student-frame course-name)))])])))
 
 
+(defn handler-add-student [course-name]
+    (let [data (value (select f [:#add-student-form]))
+          student-name (:student-name data)
+          room         (:room data)
+          seat         (:seat data)]
+          (cond 
+            (validate/is-empty? student-name room seat) (alert "Please enter all the fields")
+            (database/student-exists? course-name student-name) (alert (str "Student with name " student-name " already exists"))
+            :else (do (database/add-student course-name student-name room seat)
+                  (alert "Student added successfully")
+                  (config! f :title "Student List" 
+                             :content (student-list-frame course-name))))))
+
+
 (defn add-student-frame [course-name]
   (border-panel :vgap 150 :hgap 150
         :north " "
@@ -127,7 +141,7 @@
         :east  " "
         :center
             (vertical-panel 
-                      :id :form
+                      :id :add-student-form
                       :items [(label :text "Student Name:" :font {:size 20}) 
                               (text :id :student-name :font {:size 20})
                               " "
@@ -139,7 +153,8 @@
                               " "
                               (button :id :add-student 
                                       :text "Add Student" 
-                                      :font {:size 20})])
+                                      :font {:size 20}
+                                      :listen [:action (fn [e] (handler-add-student course-name))])])
 
         :south (flow-panel :items [(button :text "Home" 
                                            :font {:size 20} 
