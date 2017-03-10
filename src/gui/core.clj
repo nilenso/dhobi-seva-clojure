@@ -91,6 +91,29 @@
                                                      :content (view-courses-frame)))])])))
 
 
+(defn student-list-frame [course-name]
+  (border-panel :hgap 5 :vgap 5
+                :west " "
+                :east " "
+                :north (flow-panel
+                            :items [(button :text "Home"
+                                            :font {:size 20}
+                                            :listen [:action (fn [e] 
+                                                                (config! f :title "Course List" 
+                                                                           :content (view-courses-frame)))])])
+                :center (scrollable 
+                            (table
+                                :id :all-students
+                                :selection-mode :single
+                                :font {:size 16}
+                                :model [:columns
+                                          [{:key :name, :text "Student Name"}
+                                           {:key :room, :text "Room No."}
+                                           {:key :seat, :text "Seat No."}]
+                                        :rows
+                                          (vec (database/student-list course-name))]))))
+
+
 (defn -main []
   (database/main)
   (-> (config! f :title "Vipassana"
