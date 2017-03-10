@@ -120,6 +120,40 @@
                                                                            :content (add-student-frame course-name)))])])))
 
 
+(defn add-student-frame [course-name]
+  (border-panel :vgap 150 :hgap 150
+        :north " "
+        :west  " "
+        :east  " "
+        :center
+            (vertical-panel 
+                      :id :form
+                      :items [(label :text "Student Name:" :font {:size 20}) 
+                              (text :id :student-name :font {:size 20})
+                              " "
+                              (label :text "Room" :font {:size 20})
+                              (text :id :room :font {:size 20})  
+                              " "
+                              (label :text "Seat:" :font {:size 20})
+                              (text :id :seat :font {:size 20})
+                              " "
+                              (button :id :add-student 
+                                      :text "Add Student" 
+                                      :font {:size 20})])
+
+        :south (flow-panel :items [(button :text "Home" 
+                                           :font {:size 20} 
+                                           :size [150 :by 40]
+                                           :listen [:action (fn [e] (config! f :title "Course List" 
+                                                                               :content (view-courses-frame)))])
+                                   "  "
+                                   (button :text "Back" 
+                                           :font {:size 20} 
+                                           :size [150 :by 40]
+                                           :listen [:action (fn [e] (config! f :title "Student List" 
+                                                                               :content (student-list-frame course-name)))])])))
+
+
 (defn -main []
   (database/main)
   (-> (config! f :title "Vipassana"
