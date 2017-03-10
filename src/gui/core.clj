@@ -82,7 +82,13 @@
                                       :text "Add Course"
                                       :halign :center 
                                       :font {:size 20} 
-                                      :listen [:action handler-add-course])])))
+                                      :listen [:action handler-add-course])])
+        
+        :south (flow-panel :items [(button :text "Back" 
+                 :font {:size 20} 
+                 :size [200 :by 40]
+                 :listen [:action (fn [e] (config! f :title "Course List" 
+                                                     :content (view-courses-frame)))])])))
 
 
 (defn -main []
