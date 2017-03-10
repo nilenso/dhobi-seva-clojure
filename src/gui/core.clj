@@ -111,7 +111,13 @@
                                            {:key :room, :text "Room No."}
                                            {:key :seat, :text "Seat No."}]
                                         :rows
-                                          (vec (database/student-list course-name))]))))
+                                          (vec (database/student-list course-name))]))
+                :south (flow-panel
+                            :items [(button :text "Add Student"
+                                             :font {:size 20}
+                                             :listen [:action (fn [e] 
+                                                                (config! f :title "Add Student" 
+                                                                           :content (add-student-frame course-name)))])])))
 
 
 (defn -main []
