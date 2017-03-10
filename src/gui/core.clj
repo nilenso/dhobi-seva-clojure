@@ -25,7 +25,7 @@
           start-date  (:start-date data)
           duration    (:duration data)]
      (cond
-        (or (empty? course-name) (empty? start-date) (empty? duration)) (alert "Please enter all the fields")
+        (validate/is-empty? course-name start-date duration) (alert "Please enter all the fields")
         (not (validate/date-validator start-date)) (alert "Please enter date in the correct format")
         (not (validate/duration-validator duration)) (alert "Please enter correct duration")
         (database/course-exists? course-name) (alert (str "Course with name " course-name " already exists"))
