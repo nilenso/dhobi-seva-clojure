@@ -122,9 +122,9 @@
 
 (defn handler-add-student [course-name]
     (let [data (value (select f [:#add-student-form]))
-          student-name (:student-name data)
-          room         (:room data)
-          seat         (:seat data)]
+          student-name (str/trim (:student-name data))
+          room         (str/trim (:room data))
+          seat         (str/trim (:seat data))]
           (cond 
             (validate/is-empty? student-name room seat) (alert "Please enter all the fields")
             (database/student-exists? course-name student-name) (alert (str "Student with name " student-name " already exists"))
