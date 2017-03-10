@@ -47,7 +47,7 @@
                               (label :text "Start Date (YYYY-MM-DD):" :font {:size 20})
                               (text :id :start-date :font {:size 20})  
                               " "
-                              (label :text "Duration:" :font {:size 20})
+                              (label :text "Duration (days):" :font {:size 20})
                               (text :id :duration :font {:size 20})
                               " "
                               (button :id :add-course 
