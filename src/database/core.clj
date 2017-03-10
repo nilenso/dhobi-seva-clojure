@@ -29,6 +29,13 @@
           (hash-map :name all-courses, :date (get course-data "start"), :duration (get course-data "duration")))))
 
 
+(defn student-list
+  [course-name]
+  (for [all-students (sort (keys (get-in @all-course-data [course-name "students"])))]
+      (let [student-data (get-in @all-course-data [course-name "students" all-students])]
+          (hash-map :name all-students, :room (get student-data "room"), :seat (get student-data "seat")))))
+
+
 (defn main
     []
     (if (.exists (io/as-file file-path))
