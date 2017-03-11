@@ -51,6 +51,17 @@
           (hash-map :name all-students, :room (get student-data "room"), :seat (get student-data "seat")))))
 
 
+(defn student-details
+  [course-name student-name]
+  (let [student-data (get-in @all-course-data [course-name "students" student-name])
+        room (get student-data "room")
+        seat (get student-data "seat")
+        deposit (get student-data "deposit")
+        total-purchase 0
+        total-laundry 0]
+    [room seat deposit total-purchase total-laundry]))
+
+
 (defn main
     []
     (if (.exists (io/as-file file-path))
