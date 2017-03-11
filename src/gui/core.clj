@@ -247,7 +247,12 @@
                                       :text "Enter Deposit"
                                       :font {:size 20}
                                       :listen [:action (fn [e] (handler-add-deposit course-name student-name))])])
-        :south " "))
+        
+        :south (flow-panel :items [(button :text "Back"
+                                           :font {:size 20}
+                                           :size [150 :by 40]
+                                           :listen [:action (fn [e] (config! f :title "Student Details"
+                                                                               :content (view-student-frame course-name student-name)))])])))
 
 
 (defn -main []
