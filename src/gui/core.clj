@@ -114,10 +114,13 @@
                                           (vec (database/student-list course-name))]))
                 :south (flow-panel
                             :items [(button :text "Add Student"
-                                             :font {:size 20}
-                                             :listen [:action (fn [e] 
+                                            :font {:size 20}
+                                            :listen [:action (fn [e] 
                                                                 (config! f :title "Add Student" 
-                                                                           :content (add-student-frame course-name)))])])))
+                                                                           :content (add-student-frame course-name)))])
+                                    "  "
+                                    (button :text "Select Student"
+                                             :font {:size 20})])))
 
 
 (defn handler-add-student [course-name]
