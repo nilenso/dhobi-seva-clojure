@@ -262,6 +262,25 @@
                                                                                :content (view-student-frame course-name student-name)))])])))
 
 
+(defn purchase-list-frame [course-name student-name]
+  (border-panel :hgap 5 :vgap 5
+                :west " "
+                :east " "
+                :north " "
+                :center (scrollable (table
+                                :id :all-purchases
+                                :selection-mode :single
+                                :font {:size 16}
+                                :model [:columns
+                                          [{:key :serial-number, :text "S.No."}
+                                           {:key :purchase-name, :text "Purchase"}
+                                           {:key :purchase-cost, :text "Cost"}]
+                                        :rows
+                                          (vec (database/purchase-list course-name student-name))]))
+                :south " "))
+
+
+
 (defn -main []
   (database/main)
   (-> (config! f :title "Vipassana"
