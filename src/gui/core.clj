@@ -221,6 +221,22 @@
                                                                     :content (student-list-frame course-name)))])]))))
 
 
+(defn enter-deposit-frame [course-name student-name]
+  (border-panel :vgap 215 :hgap 200
+        :north " "
+        :west  " "
+        :east  " "
+        :center (vertical-panel
+                      :id :deposit-form
+                      :items [(label :text "Deposit Amount:" :font {:size 20})
+                              (text :id :deposit :font {:size 20})
+                              " "
+                              (button :id :enter-deposit
+                                      :text "Enter Deposit"
+                                      :font {:size 20})])
+        :south " "))
+
+
 (defn -main []
   (database/main)
   (-> (config! f :title "Vipassana"
