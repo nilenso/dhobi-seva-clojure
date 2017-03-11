@@ -8,6 +8,7 @@
 (declare add-course-frame)
 (declare add-student-frame)
 (declare student-list-frame)
+(declare view-student-frame)
 
 (def f (frame :size [800 :by 600] :resizable? false))
 
@@ -91,6 +92,16 @@
                                                      :content (view-courses-frame)))])])))
 
 
+(defn handler-view-student [course-name]
+    (let [table (select f [:#all-students])
+          data (value-at table (selection table))
+          student-name (:name data)]
+          (cond 
+            (empty? student-name) (alert "Please select a student")
+            :else (config! f :title "Student Details" 
+                             :content (view-student-frame course-name student-name)))))
+
+
 (defn student-list-frame [course-name]
   (border-panel :hgap 5 :vgap 5
                 :west " "
@@ -114,10 +125,15 @@
                                           (vec (database/student-list course-name))]))
                 :south (flow-panel
                             :items [(button :text "Add Student"
-                                             :font {:size 20}
-                                             :listen [:action (fn [e] 
+                                            :font {:size 20}
+                                            :listen [:action (fn [e] 
                                                                 (config! f :title "Add Student" 
-                                                                           :content (add-student-frame course-name)))])])))
+                                                                           :content (add-student-frame course-name)))])
+                                    "  "
+                                    (button :text "Select Student"
+                                             :font {:size 20}
+                                             :listen [:action (fn [e]
+                                                                  (handler-view-student course-name))])])))
 
 
 (defn handler-add-student [course-name]
@@ -167,6 +183,36 @@
                                            :size [150 :by 40]
                                            :listen [:action (fn [e] (config! f :title "Student List" 
                                                                                :content (student-list-frame course-name)))])])))
+
+
+(defn view-student-frame
+  [course-name student-name]
+  (let [[room seat deposit purchase laundry] (database/student-details course-name student-name)]
+  (border-panel :hgap 100 :vgap 100
+    :north " "
+    :west  " "
+    :east  " "
+    :center (grid-panel
+                :border "Details"
+                :columns 2
+                :items [(label :text "Name" :font {:size 20}) 
+                        (label :text student-name :font {:size 20})
+                        (label :text "Room" :font {:size 20}) 
+                        (label :text room :font {:size 20})
+                        (label :text "Seat" :font {:size 20}) 
+                        (label :text seat :font {:size 20})
+                        (label :text "Deposit" :font {:size 20}) 
+                        (label :text deposit :font {:size 20})
+                        (label :text "Purchases" :font {:size 20}) 
+                        (label :text purchase :font {:size 20})
+                        (label :text "Laundry" :font {:size 20}) 
+                        (label :text laundry :font {:size 20})])
+    :south (flow-panel 
+                :items [(button :text "Back" 
+                                :font {:size 20} 
+                                :size [150 :by 40]
+                                :listen [:action (fn [e] (config! f :title "Student List" 
+                                                                    :content (student-list-frame course-name)))])]))))
 
 
 (defn -main []
