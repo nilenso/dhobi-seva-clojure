@@ -185,6 +185,30 @@
                                                                                :content (student-list-frame course-name)))])])))
 
 
+(defn view-student-frame
+  [course-name student-name]
+  (let [[room seat deposit purchase laundry] (database/student-details course-name student-name)]
+  (border-panel :hgap 100 :vgap 100
+    :north " "
+    :west  " "
+    :east  " "
+    :center (grid-panel
+                :border "Details"
+                :columns 2
+                :items [(label :text "Name" :font {:size 20}) 
+                        (label :text student-name :font {:size 20})
+                        (label :text "Room" :font {:size 20}) 
+                        (label :text room :font {:size 20})
+                        (label :text "Seat" :font {:size 20}) 
+                        (label :text seat :font {:size 20})
+                        (label :text "Deposit" :font {:size 20}) 
+                        (label :text deposit :font {:size 20})
+                        (label :text "Purchases" :font {:size 20}) 
+                        (label :text purchase :font {:size 20})
+                        (label :text "Laundry" :font {:size 20}) 
+                        (label :text laundry :font {:size 20})]))))
+
+
 (defn -main []
   (database/main)
   (-> (config! f :title "Vipassana"
