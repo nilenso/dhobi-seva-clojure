@@ -206,7 +206,13 @@
                         (label :text "Purchases" :font {:size 20}) 
                         (label :text purchase :font {:size 20})
                         (label :text "Laundry" :font {:size 20}) 
-                        (label :text laundry :font {:size 20})]))))
+                        (label :text laundry :font {:size 20})])
+    :south (flow-panel 
+                :items [(button :text "Back" 
+                                :font {:size 20} 
+                                :size [150 :by 40]
+                                :listen [:action (fn [e] (config! f :title "Student List" 
+                                                                    :content (student-list-frame course-name)))])]))))
 
 
 (defn -main []
