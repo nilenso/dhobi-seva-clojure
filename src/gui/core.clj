@@ -221,6 +221,18 @@
                                                                     :content (student-list-frame course-name)))])]))))
 
 
+(defn handler-add-deposit [course-name student-name]
+    (let [data (value (select f [:#deposit-form]))
+          deposit (str/trim (:deposit data))]
+        (cond 
+          (empty? deposit) (alert "Please enter the deposit amount")
+          (not (validate/integer-validator deposit)) (alert "Please enter correct deposit amount")
+          :else (do (database/add-deposit course-name student-name deposit)
+                    (alert "Deposit added successfully")
+                    (config! f :title "Student Details" 
+                               :content (view-student-frame course-name student-name))))))
+
+
 (defn enter-deposit-frame [course-name student-name]
   (border-panel :vgap 215 :hgap 200
         :north " "
@@ -233,7 +245,8 @@
                               " "
                               (button :id :enter-deposit
                                       :text "Enter Deposit"
-                                      :font {:size 20})])
+                                      :font {:size 20}
+                                      :listen [:action (fn [e] (handler-add-deposit course-name student-name))])])
         :south " "))
 
 
