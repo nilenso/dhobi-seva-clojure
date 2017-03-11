@@ -9,6 +9,7 @@
 (declare add-student-frame)
 (declare student-list-frame)
 (declare view-student-frame)
+(declare enter-deposit-frame)
 
 (def f (frame :size [800 :by 600] :resizable? false))
 
@@ -208,7 +209,12 @@
                         (label :text "Laundry" :font {:size 20}) 
                         (label :text laundry :font {:size 20})])
     :south (flow-panel 
-                :items [(button :text "Back" 
+                :items [(button :text "Enter Deposit"
+                                :font {:size 20}
+                                :listen [:action (fn [e] (config! f :title "Enter Deposit"
+                                                                    :content (enter-deposit-frame course-name student-name)))])
+                               " "
+                        (button :text "Back"
                                 :font {:size 20} 
                                 :size [150 :by 40]
                                 :listen [:action (fn [e] (config! f :title "Student List" 
