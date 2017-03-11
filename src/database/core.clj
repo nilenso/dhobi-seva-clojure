@@ -62,6 +62,11 @@
     [room seat deposit total-purchase total-laundry]))
 
 
+(defn add-deposit
+    [course-name student-name deposit]
+        (swap! all-course-data assoc-in [course-name "students" student-name "deposit"] (Integer. deposit)))
+
+
 (defn main
     []
     (if (.exists (io/as-file file-path))

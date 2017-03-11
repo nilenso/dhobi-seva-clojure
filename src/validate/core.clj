@@ -13,3 +13,7 @@
 (defn is-empty?
 	[& args]
 	(some empty? args))
+
+(defn integer-validator
+	[duration]
+	(re-find #"^[1-9][0-9]*$" duration))
