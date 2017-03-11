@@ -8,6 +8,7 @@
 (declare add-course-frame)
 (declare add-student-frame)
 (declare student-list-frame)
+(declare view-student-frame)
 
 (def f (frame :size [800 :by 600] :resizable? false))
 
@@ -91,6 +92,16 @@
                                                      :content (view-courses-frame)))])])))
 
 
+(defn handler-view-student [course-name]
+    (let [table (select f [:#all-students])
+          data (value-at table (selection table))
+          student-name (:name data)]
+          (cond 
+            (empty? student-name) (alert "Please select a student")
+            :else (config! f :title "Student Details" 
+                             :content (view-student-frame course-name student-name)))))
+
+
 (defn student-list-frame [course-name]
   (border-panel :hgap 5 :vgap 5
                 :west " "
@@ -120,7 +131,9 @@
                                                                            :content (add-student-frame course-name)))])
                                     "  "
                                     (button :text "Select Student"
-                                             :font {:size 20})])))
+                                             :font {:size 20}
+                                             :listen [:action (fn [e]
+                                                                  (handler-view-student course-name))])])))
 
 
 (defn handler-add-student [course-name]
