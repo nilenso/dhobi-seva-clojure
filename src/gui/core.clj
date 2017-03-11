@@ -10,6 +10,7 @@
 (declare student-list-frame)
 (declare view-student-frame)
 (declare enter-deposit-frame)
+(declare purchase-list-frame)
 
 (def f (frame :size [800 :by 600] :resizable? false))
 
@@ -213,7 +214,13 @@
                                 :font {:size 20}
                                 :listen [:action (fn [e] (config! f :title "Enter Deposit"
                                                                     :content (enter-deposit-frame course-name student-name)))])
-                               " "
+                        " "
+                        (button :text "Purchases" 
+                                           :font {:size 20} 
+                                           :size [150 :by 40]
+                                           :listen [:action (fn [e] (config! f :title "Purchase List"
+                                                                               :content (purchase-list-frame course-name student-name)))])
+                        " "
                         (button :text "Back"
                                 :font {:size 20} 
                                 :size [150 :by 40]
