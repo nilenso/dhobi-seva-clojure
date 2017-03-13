@@ -75,6 +75,14 @@
         (swap! all-course-data assoc-in [course-name "students" student-name "purchases" length] data)))
 
 
+(defn add-laundry
+    [course-name student-name laundry-cost]
+        (let [data {"laundry-name" "Laundry"
+                    "laundry-cost" (Integer. laundry-cost)}
+              length (count (get-in @all-course-data [course-name "students" student-name "laundry"]))]
+        (swap! all-course-data assoc-in [course-name "students" student-name "laundry" length] data)))
+
+
 (defn purchase-list
   [course-name student-name]
   (let [x (atom 0)]
