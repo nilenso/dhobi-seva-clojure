@@ -12,6 +12,7 @@
 (declare enter-deposit-frame)
 (declare purchase-list-frame)
 (declare add-purchase-frame)
+(declare laundry-list-frame)
 
 (def f (frame :size [800 :by 600] :resizable? false))
 
@@ -222,6 +223,12 @@
                                            :listen [:action (fn [e] (config! f :title "Purchase List"
                                                                                :content (purchase-list-frame course-name student-name)))])
                         " "
+                        (button :text "Laundry"
+                                           :font {:size 20}
+                                           :size [150 :by 40]
+                                           :listen [:action (fn [e] (config! f :title "Laundry List"
+                                                                               :content (laundry-list-frame course-name student-name)))])
+                        " "
                         (button :text "Back"
                                 :font {:size 20} 
                                 :size [150 :by 40]
@@ -329,6 +336,29 @@
                                            :size [150 :by 40]
                                            :listen [:action (fn [e] (config! f :title "Purchase List"
                                                                                :content (purchase-list-frame course-name student-name)))])])))
+
+
+(defn laundry-list-frame [course-name student-name]
+  (border-panel :hgap 5 :vgap 5
+                :west " "
+                :east " "
+                :north " "
+                :center (scrollable (table
+                                :id :all-laundry
+                                :selection-mode :single
+                                :font {:size 16}
+                                :model [:columns
+                                          [{:key :serial-number, :text "S.No."}
+                                           {:key :laundry-name, :text "Name"}
+                                           {:key :laundry-cost, :text "Cost"}]
+                                        :rows
+                                          (vec (database/laundry-list course-name student-name))]))
+                :south (flow-panel
+                            :items [(button :text "Back"
+                                            :font {:size 20}
+                                            :listen [:action (fn [e]
+                                                                (config! f :title "Student Details"
+                                                                           :content (view-student-frame course-name student-name)))])])))
 
 
 (defn -main []
