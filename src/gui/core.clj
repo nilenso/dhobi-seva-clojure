@@ -354,7 +354,13 @@
                                         :rows
                                           (vec (database/laundry-list course-name student-name))]))
                 :south (flow-panel
-                            :items [(button :text "Back"
+                            :items [(button :text "Add Laundry"
+                                             :font {:size 20}
+                                             :listen [:action (fn [e]
+                                                                (config! f :title "Add Laundry"
+                                                                           :content (add-laundry-frame course-name student-name)))])
+                                    "  "
+                                    (button :text "Back"
                                             :font {:size 20}
                                             :listen [:action (fn [e]
                                                                 (config! f :title "Student Details"
