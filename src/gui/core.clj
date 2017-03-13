@@ -292,6 +292,19 @@
                                                                            :content (view-student-frame course-name student-name)))])])))
 
 
+(defn handler-add-purchase [course-name student-name]
+    (let [data (value (select f [:#purchase-form]))
+          purchase-name (str/trim (:purchase-name data))
+          purchase-cost (str/trim (:purchase-cost data))]
+      (cond
+          (or (empty? student-name) (empty? purchase-cost)) (alert "Please enter all the fields")
+          (not (validate/integer-validator purchase-cost)) (alert "Please enter correct cost")
+          :else (do (database/add-purchase course-name student-name purchase-name purchase-cost)
+                    (alert "Purchase added successfully")
+                    (config! f :title "Purchase List"
+                               :content (purchase-list-frame course-name student-name))))))
+
+
 (defn add-purchase-frame [course-name student-name]
   (border-panel :hgap 180 :vgap 180
         :north " "
@@ -308,7 +321,8 @@
                               " "
                               (button :id :add-purchase
                                       :text "Add Purchase"
-                                      :font {:size 20})])
+                                      :font {:size 20}
+                                      :listen [:action (fn [e] (handler-add-purchase course-name student-name))])])
 
         :south " "))
 
