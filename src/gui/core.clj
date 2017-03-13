@@ -14,6 +14,7 @@
 (declare add-purchase-frame)
 (declare laundry-list-frame)
 (declare add-laundry-frame)
+(declare handler-end-course)
 
 (def f (frame :size [800 :by 600] :resizable? false))
 
@@ -138,7 +139,12 @@
                                     (button :text "Select Student"
                                              :font {:size 20}
                                              :listen [:action (fn [e]
-                                                                  (handler-view-student course-name))])])))
+                                                                  (handler-view-student course-name))])
+                                    "  "
+                                    (button :text "End Course"
+                                             :font {:size 20}
+                                             :listen [:action (fn [e]
+                                                                  (handler-end-course course-name))])])))
 
 
 (defn handler-add-student [course-name]
