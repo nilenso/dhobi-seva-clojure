@@ -277,7 +277,12 @@
                                            {:key :purchase-cost, :text "Cost"}]
                                         :rows
                                           (vec (database/purchase-list course-name student-name))]))
-                :south " "))
+                :south (flow-panel
+                            :items [(button :text "Back"
+                                            :font {:size 20}
+                                            :listen [:action (fn [e]
+                                                                (config! f :title "Student Details"
+                                                                           :content (view-student-frame course-name student-name)))])])))
 
 
 
