@@ -2,6 +2,7 @@
   (:use [seesaw core table])
   (:require [database.core :as database])
   (:require [validate.core :as validate])
+  (:require [printpdf.core :as printpdf])
   (:require [clojure.string :as str])
   (:gen-class))
 
@@ -407,6 +408,14 @@
                                            :size [150 :by 40]
                                            :listen [:action (fn [e] (config! f :title "Laundry List"
                                                                                :content (laundry-list-frame course-name student-name)))])])))
+
+
+(defn handler-end-course
+  [course-name]
+  (do (printpdf/generate-pdf course-name)
+      (alert "Course ended")
+      (config! f :title "Course List"
+                 :content (view-courses-frame))))
 
 
 (defn -main []
