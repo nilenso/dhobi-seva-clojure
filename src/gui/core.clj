@@ -13,6 +13,7 @@
 (declare purchase-list-frame)
 (declare add-purchase-frame)
 (declare laundry-list-frame)
+(declare add-laundry-frame)
 
 (def f (frame :size [800 :by 600] :resizable? false))
 
@@ -354,11 +355,52 @@
                                         :rows
                                           (vec (database/laundry-list course-name student-name))]))
                 :south (flow-panel
-                            :items [(button :text "Back"
+                            :items [(button :text "Add Laundry"
+                                             :font {:size 20}
+                                             :listen [:action (fn [e]
+                                                                (config! f :title "Add Laundry"
+                                                                           :content (add-laundry-frame course-name student-name)))])
+                                    "  "
+                                    (button :text "Back"
                                             :font {:size 20}
                                             :listen [:action (fn [e]
                                                                 (config! f :title "Student Details"
                                                                            :content (view-student-frame course-name student-name)))])])))
+
+
+(defn handler-add-laundry [course-name student-name]
+    (let [data (value (select f [:#laundry-form]))
+          laundry-cost (str/trim (:laundry-cost data))]
+        (cond
+          (validate/is-empty? laundry-cost) (alert "Please enter laundry cost")
+          (not (validate/integer-validator laundry-cost)) (alert "Please enter correct cost")
+          :else (do (database/add-laundry course-name student-name laundry-cost)
+                    (alert "Laundry added successfully")
+                    (config! f :title "Laundry List"
+                               :content (laundry-list-frame course-name student-name))))))
+
+
+(defn add-laundry-frame [course-name student-name]
+  (border-panel :vgap 215 :hgap 200
+        :north " "
+        :west  " "
+        :east  " "
+        :center
+          (vertical-panel
+                      :id :laundry-form
+                      :items [(label :text "Laundry Cost:" :font {:size 20})
+                              (text :id :laundry-cost :font {:size 20})
+                              " "
+                              (button :id :add-laundry
+                                      :text "Add Laundry"
+                                      :font {:size 20}
+                                      :listen [:action (fn [e] (handler-add-laundry course-name student-name))])])
+
+       :south (flow-panel :items [(button :text "Back"
+                                           :font {:size 20}
+                                           :size [150 :by 40]
+                                           :listen [:action (fn [e] (config! f :title "Laundry List"
+                                                                               :content (laundry-list-frame course-name student-name)))])])))
 
 
 (defn -main []

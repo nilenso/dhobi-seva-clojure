@@ -51,14 +51,27 @@
           (hash-map :name all-students, :room (get student-data "room"), :seat (get student-data "seat")))))
 
 
+(defn sum-of-list
+  [in-list]
+  (if (empty? in-list) 
+      0 
+      (reduce + in-list)))
+
+
 (defn student-details
   [course-name student-name]
   (let [student-data (get-in @all-course-data [course-name "students" student-name])
         room (get student-data "room")
         seat (get student-data "seat")
         deposit (get student-data "deposit")
-        total-purchase 0
-        total-laundry 0]
+        all-purchases (get student-data  "purchases")
+        purchase-amount-list (for [purchase all-purchases]
+                                    (get purchase "purchase-cost"))
+        total-purchase (sum-of-list purchase-amount-list)
+        all-laundry (get student-data  "laundry")
+        laundry-amount-list (for [laundry all-laundry]
+                                    (get laundry "laundry-cost"))
+        total-laundry (sum-of-list laundry-amount-list)]
     [room seat deposit total-purchase total-laundry]))
 
 
@@ -73,6 +86,14 @@
                     "purchase-cost" (Integer. purchase-cost)}
               length (count (get-in @all-course-data [course-name "students" student-name "purchases"]))]
         (swap! all-course-data assoc-in [course-name "students" student-name "purchases" length] data)))
+
+
+(defn add-laundry
+    [course-name student-name laundry-cost]
+        (let [data {"laundry-name" "Laundry"
+                    "laundry-cost" (Integer. laundry-cost)}
+              length (count (get-in @all-course-data [course-name "students" student-name "laundry"]))]
+        (swap! all-course-data assoc-in [course-name "students" student-name "laundry" length] data)))
 
 
 (defn purchase-list
