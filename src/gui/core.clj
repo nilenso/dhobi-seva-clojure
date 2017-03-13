@@ -324,7 +324,11 @@
                                       :font {:size 20}
                                       :listen [:action (fn [e] (handler-add-purchase course-name student-name))])])
 
-        :south " "))
+        :south (flow-panel :items [(button :text "Back"
+                                           :font {:size 20}
+                                           :size [150 :by 40]
+                                           :listen [:action (fn [e] (config! f :title "Purchase List"
+                                                                               :content (purchase-list-frame course-name student-name)))])])))
 
 
 (defn -main []
