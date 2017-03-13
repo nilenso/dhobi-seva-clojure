@@ -67,6 +67,16 @@
         (swap! all-course-data assoc-in [course-name "students" student-name "deposit"] (Integer. deposit)))
 
 
+(defn purchase-list
+  [course-name student-name]
+  (let [x (atom 0)]
+    (for [all-purchases (get-in @all-course-data [course-name "students" student-name "purchases"])
+          :let [position (swap! x inc)]]
+        (hash-map :serial-number position, 
+                  :purchase-name (get all-purchases "purchase-name"), 
+                  :purchase-cost (get all-purchases "purchase-cost")))))
+
+
 (defn main
     []
     (if (.exists (io/as-file file-path))

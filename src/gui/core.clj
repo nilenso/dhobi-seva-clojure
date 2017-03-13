@@ -10,6 +10,7 @@
 (declare student-list-frame)
 (declare view-student-frame)
 (declare enter-deposit-frame)
+(declare purchase-list-frame)
 
 (def f (frame :size [800 :by 600] :resizable? false))
 
@@ -213,7 +214,13 @@
                                 :font {:size 20}
                                 :listen [:action (fn [e] (config! f :title "Enter Deposit"
                                                                     :content (enter-deposit-frame course-name student-name)))])
-                               " "
+                        " "
+                        (button :text "Purchases" 
+                                           :font {:size 20} 
+                                           :size [150 :by 40]
+                                           :listen [:action (fn [e] (config! f :title "Purchase List"
+                                                                               :content (purchase-list-frame course-name student-name)))])
+                        " "
                         (button :text "Back"
                                 :font {:size 20} 
                                 :size [150 :by 40]
@@ -253,6 +260,30 @@
                                            :size [150 :by 40]
                                            :listen [:action (fn [e] (config! f :title "Student Details"
                                                                                :content (view-student-frame course-name student-name)))])])))
+
+
+(defn purchase-list-frame [course-name student-name]
+  (border-panel :hgap 5 :vgap 5
+                :west " "
+                :east " "
+                :north " "
+                :center (scrollable (table
+                                :id :all-purchases
+                                :selection-mode :single
+                                :font {:size 16}
+                                :model [:columns
+                                          [{:key :serial-number, :text "S.No."}
+                                           {:key :purchase-name, :text "Purchase"}
+                                           {:key :purchase-cost, :text "Cost"}]
+                                        :rows
+                                          (vec (database/purchase-list course-name student-name))]))
+                :south (flow-panel
+                            :items [(button :text "Back"
+                                            :font {:size 20}
+                                            :listen [:action (fn [e]
+                                                                (config! f :title "Student Details"
+                                                                           :content (view-student-frame course-name student-name)))])])))
+
 
 
 (defn -main []
