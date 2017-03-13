@@ -292,6 +292,26 @@
                                                                            :content (view-student-frame course-name student-name)))])])))
 
 
+(defn add-purchase-frame [course-name student-name]
+  (border-panel :hgap 180 :vgap 180
+        :north " "
+        :west  " "
+        :east  " "
+        :center
+          (vertical-panel
+                      :id :purchase-form
+                      :items [(label :text "Purchase Name:" :font {:size 20})
+                              (text :id :purchase-name :font {:size 20})
+                              " "
+                              (label :text "Cost:" :font {:size 20})
+                              (text :id :purchase-cost :font {:size 20})
+                              " "
+                              (button :id :add-purchase
+                                      :text "Add Purchase"
+                                      :font {:size 20})])
+
+        :south " "))
+
 
 (defn -main []
   (database/main)
