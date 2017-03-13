@@ -338,6 +338,24 @@
                                                                                :content (purchase-list-frame course-name student-name)))])])))
 
 
+(defn laundry-list-frame [course-name student-name]
+  (border-panel :hgap 5 :vgap 5
+                :west " "
+                :east " "
+                :north " "
+                :center (scrollable (table
+                                :id :all-laundry
+                                :selection-mode :single
+                                :font {:size 16}
+                                :model [:columns
+                                          [{:key :serial-number, :text "S.No."}
+                                           {:key :laundry-name, :text "Name"}
+                                           {:key :laundry-cost, :text "Cost"}]
+                                        :rows
+                                          (vec (database/laundry-list course-name student-name))]))
+                :south " "))
+
+
 (defn -main []
   (database/main)
   (-> (config! f :title "Vipassana"
