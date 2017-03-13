@@ -85,6 +85,16 @@
                   :purchase-cost (get all-purchases "purchase-cost")))))
 
 
+(defn laundry-list
+  [course-name student-name]
+  (let [x (atom 0)]
+    (for [all-laundry (get-in @all-course-data [course-name "students" student-name "laundry"])
+          :let [position (swap! x inc)]]
+        (hash-map :serial-number position, 
+                  :laundry-name "Laundry", 
+                  :laundry-cost (get all-laundry "laundry-cost")))))
+
+
 (defn main
     []
     (if (.exists (io/as-file file-path))
