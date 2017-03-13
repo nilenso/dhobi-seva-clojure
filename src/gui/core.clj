@@ -12,6 +12,7 @@
 (declare enter-deposit-frame)
 (declare purchase-list-frame)
 (declare add-purchase-frame)
+(declare laundry-list-frame)
 
 (def f (frame :size [800 :by 600] :resizable? false))
 
@@ -221,6 +222,12 @@
                                            :size [150 :by 40]
                                            :listen [:action (fn [e] (config! f :title "Purchase List"
                                                                                :content (purchase-list-frame course-name student-name)))])
+                        " "
+                        (button :text "Laundry"
+                                           :font {:size 20}
+                                           :size [150 :by 40]
+                                           :listen [:action (fn [e] (config! f :title "Laundry List"
+                                                                               :content (laundry-list-frame course-name student-name)))])
                         " "
                         (button :text "Back"
                                 :font {:size 20} 
