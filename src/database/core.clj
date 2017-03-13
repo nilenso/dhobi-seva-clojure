@@ -116,6 +116,11 @@
                   :laundry-cost (get all-laundry "laundry-cost")))))
 
 
+(defn all-student-names
+  [course-name]
+  (sort (keys (get-in @all-course-data [course-name "students"]))))
+
+
 (defn main
     []
     (if (.exists (io/as-file file-path))

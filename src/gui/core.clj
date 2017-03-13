@@ -2,6 +2,7 @@
   (:use [seesaw core table])
   (:require [database.core :as database])
   (:require [validate.core :as validate])
+  (:require [printpdf.core :as printpdf])
   (:require [clojure.string :as str])
   (:gen-class))
 
@@ -14,6 +15,7 @@
 (declare add-purchase-frame)
 (declare laundry-list-frame)
 (declare add-laundry-frame)
+(declare handler-end-course)
 
 (def f (frame :size [800 :by 600] :resizable? false))
 
@@ -138,7 +140,12 @@
                                     (button :text "Select Student"
                                              :font {:size 20}
                                              :listen [:action (fn [e]
-                                                                  (handler-view-student course-name))])])))
+                                                                  (handler-view-student course-name))])
+                                    "  "
+                                    (button :text "End Course"
+                                             :font {:size 20}
+                                             :listen [:action (fn [e]
+                                                                  (handler-end-course course-name))])])))
 
 
 (defn handler-add-student [course-name]
@@ -401,6 +408,14 @@
                                            :size [150 :by 40]
                                            :listen [:action (fn [e] (config! f :title "Laundry List"
                                                                                :content (laundry-list-frame course-name student-name)))])])))
+
+
+(defn handler-end-course
+  [course-name]
+  (do (printpdf/generate-pdf course-name)
+      (alert "Course ended")
+      (config! f :title "Course List"
+                 :content (view-courses-frame))))
 
 
 (defn -main []
