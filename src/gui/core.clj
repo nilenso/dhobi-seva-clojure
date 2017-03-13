@@ -11,6 +11,7 @@
 (declare view-student-frame)
 (declare enter-deposit-frame)
 (declare purchase-list-frame)
+(declare add-purchase-frame)
 
 (def f (frame :size [800 :by 600] :resizable? false))
 
@@ -278,7 +279,13 @@
                                         :rows
                                           (vec (database/purchase-list course-name student-name))]))
                 :south (flow-panel
-                            :items [(button :text "Back"
+                            :items [(button :text "Add Purchase"
+                                             :font {:size 20}
+                                             :listen [:action (fn [e]
+                                                                (config! f :title "Add Purchase"
+                                                                           :content (add-purchase-frame course-name student-name)))])
+                                    "  "
+                                    (button :text "Back"
                                             :font {:size 20}
                                             :listen [:action (fn [e]
                                                                 (config! f :title "Student Details"
