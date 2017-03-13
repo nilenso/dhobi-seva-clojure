@@ -368,6 +368,18 @@
                                                                            :content (view-student-frame course-name student-name)))])])))
 
 
+(defn handler-add-laundry [course-name student-name]
+    (let [data (value (select f [:#laundry-form]))
+          laundry-cost (str/trim (:laundry-cost data))]
+        (cond
+          (validate/is-empty? laundry-cost) (alert "Please enter laundry cost")
+          (not (validate/integer-validator laundry-cost)) (alert "Please enter correct cost")
+          :else (do (database/add-laundry course-name student-name laundry-cost)
+                    (alert "Laundry added successfully")
+                    (config! f :title "Laundry List"
+                               :content (laundry-list-frame course-name student-name))))))
+
+
 (defn add-laundry-frame [course-name student-name]
   (border-panel :vgap 215 :hgap 200
         :north " "
@@ -381,7 +393,8 @@
                               " "
                               (button :id :add-laundry
                                       :text "Add Laundry"
-                                      :font {:size 20})])
+                                      :font {:size 20}
+                                      :listen [:action (fn [e] (handler-add-laundry course-name student-name))])])
 
        :south " "))
 
