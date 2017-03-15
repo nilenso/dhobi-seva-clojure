@@ -125,4 +125,4 @@
 (defn main
     []
     (if (.exists (io/as-file file-path))
-        (reset! all-course-data (json/read-str (slurp file-path)))))
+        (reset! all-course-data (json/read-str (slurp file-path) :key-fn keyword))))
