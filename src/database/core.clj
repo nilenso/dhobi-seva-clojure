@@ -25,7 +25,7 @@
                    :deposit 0,
                    :purchases [],
                    :laundry []}]
-        (swap! all-course-data assoc-in [(keyword course-name) :students student-name] student)))
+        (swap! all-course-data assoc-in [(keyword course-name) :students (keyword student-name)] student)))
 
 
 (defn course-exists?
@@ -35,7 +35,7 @@
 
 (defn student-exists?
     [course-name student-name]
-    (get-in @all-course-data [(keyword course-name) :students student-name]))
+    (get-in @all-course-data [(keyword course-name) :students (keyword student-name)]))
 
 
 (defn course-list
@@ -61,7 +61,7 @@
 
 (defn student-details
   [course-name student-name]
-  (let [student-data (get-in @all-course-data [(keyword course-name) :students student-name])
+  (let [student-data (get-in @all-course-data [(keyword course-name) :students (keyword student-name)])
         room (get student-data :room)
         seat (get student-data :seat)
         deposit (get student-data :deposit)
@@ -78,29 +78,29 @@
 
 (defn add-deposit
     [course-name student-name deposit]
-        (swap! all-course-data assoc-in [(keyword course-name) :students student-name :deposit] (Integer. deposit)))
+        (swap! all-course-data assoc-in [(keyword course-name) :students (keyword student-name) :deposit] (Integer. deposit)))
 
 
 (defn add-purchase
     [course-name student-name purchase-name purchase-cost]
         (let [data {:purchase-name purchase-name,
                     :purchase-cost (Integer. purchase-cost)}
-              length (count (get-in @all-course-data [(keyword course-name) :students student-name :purchases]))]
-        (swap! all-course-data assoc-in [(keyword course-name) :students student-name :purchases length] data)))
+              length (count (get-in @all-course-data [(keyword course-name) :students (keyword student-name) :purchases]))]
+        (swap! all-course-data assoc-in [(keyword course-name) :students (keyword student-name) :purchases length] data)))
 
 
 (defn add-laundry
     [course-name student-name laundry-cost]
         (let [data {:laundry-name "Laundry"
                     :laundry-cost (Integer. laundry-cost)}
-              length (count (get-in @all-course-data [(keyword course-name) :students student-name :laundry]))]
-        (swap! all-course-data assoc-in [(keyword course-name) :students student-name :laundry length] data)))
+              length (count (get-in @all-course-data [(keyword course-name) :students (keyword student-name) :laundry]))]
+        (swap! all-course-data assoc-in [(keyword course-name) :students (keyword student-name) :laundry length] data)))
 
 
 (defn purchase-list
   [course-name student-name]
   (let [x (atom 0)]
-    (for [all-purchases (get-in @all-course-data [(keyword course-name) :students student-name :purchases])
+    (for [all-purchases (get-in @all-course-data [(keyword course-name) :students (keyword student-name) :purchases])
           :let [position (swap! x inc)]]
         (hash-map :serial-number position, 
                   :purchase-name (get all-purchases :purchase-name), 
@@ -110,7 +110,7 @@
 (defn laundry-list
   [course-name student-name]
   (let [x (atom 0)]
-    (for [all-laundry (get-in @all-course-data [(keyword course-name) :students student-name :laundry])
+    (for [all-laundry (get-in @all-course-data [(keyword course-name) :students (keyword student-name) :laundry])
           :let [position (swap! x inc)]]
         (hash-map :serial-number position, 
                   :laundry-name "Laundry", 
