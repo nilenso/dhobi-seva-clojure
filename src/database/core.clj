@@ -14,24 +14,35 @@
 (defn empty-data! []
   (reset! all-course-data {}))
 
+(defn reset-from-json! []
+  (reset! all-course-data (json/read-str (slurp (json-path)) :key-fn keyword)))
+
+(defn save! []
+  (spit (json-path) (json/write-str @all-course-data)))
+
 (defn add-course
     [course-name start duration]
-    (let [this-course {:start start,
-                       :duration duration,
+    (let [this-course {:name course-name
+                       :start start
+                       :duration duration
                        :students {}}]
-        (swap! all-course-data assoc-in [(keyword course-name)] this-course)))
+      ;; TODO: use a set or a vector (probably a vector) instead of a map to store courses
+      (swap! all-course-data assoc-in [(keyword course-name)] this-course)
+      (save!)
+      this-course))
 
 (defn add-student
-    [course-name student-name room-num seat-num]
-    (let [student {:name student-name
-                   :room room-num,
-                   :seat seat-num,
-                   :deposit 0,
-                   :purchases [],
-                   :laundry []}]
-      ;; TODO: use a set or a vector instead of a map to store students
-      (swap! all-course-data assoc-in [(keyword course-name) :students (keyword student-name)] student)
-      student))
+  [course-name student-name room-num seat-num]
+  ;; TODO: check that course-name actually exists, otherwise error (this is very, very optional)
+  (let [student {:name student-name
+                 :room room-num,
+                 :seat seat-num,
+                 :deposit 0,
+                 :purchases [],
+                 :laundry []}]
+    ;; TODO: use a set or a vector instead of a map to store students
+    (swap! all-course-data assoc-in [(keyword course-name) :students (keyword student-name)] student)
+    student))
 
 (defn course-exists?
     [course-name]
@@ -127,4 +138,4 @@
 (defn init
     []
     (if (.exists (io/as-file (json-path)))
-      (reset! all-course-data (json/read-str (slurp (json-path)) :key-fn keyword))))
+      (reset-from-json!)))
