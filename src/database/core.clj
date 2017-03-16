@@ -9,6 +9,8 @@
 (def all-course-data (atom {}))
 (def file-path "data.json")
 
+(defn empty-data! []
+  (reset! all-course-data {}))
 
 (defn add-course
     [course-name start duration]
@@ -17,16 +19,17 @@
                        :students {}}]
         (swap! all-course-data assoc-in [(keyword course-name)] this-course)))
 
-
 (defn add-student
-    [course-name student-name roomNo seatNo]
-    (let [student {:room roomNo,
-                   :seat seatNo,
+    [course-name student-name room-num seat-num]
+    (let [student {:name student-name
+                   :room room-num,
+                   :seat seat-num,
                    :deposit 0,
                    :purchases [],
                    :laundry []}]
-        (swap! all-course-data assoc-in [(keyword course-name) :students (keyword student-name)] student)))
-
+      ;; TODO: use a set or a vector instead of a map to store students
+      (swap! all-course-data assoc-in [(keyword course-name) :students (keyword student-name)] student)
+      student))
 
 (defn course-exists?
     [course-name]
@@ -54,8 +57,8 @@
 
 (defn sum-of-list
   [in-list]
-  (if (empty? in-list) 
-      0 
+  (if (empty? in-list)
+      0
       (reduce + in-list)))
 
 
@@ -102,8 +105,8 @@
   (let [x (atom 0)]
     (for [all-purchases (get-in @all-course-data [(keyword course-name) :students (keyword student-name) :purchases])
           :let [position (swap! x inc)]]
-        (hash-map :serial-number position, 
-                  :purchase-name (get all-purchases :purchase-name), 
+        (hash-map :serial-number position,
+                  :purchase-name (get all-purchases :purchase-name),
                   :purchase-cost (get all-purchases :purchase-cost)))))
 
 
@@ -112,8 +115,8 @@
   (let [x (atom 0)]
     (for [all-laundry (get-in @all-course-data [(keyword course-name) :students (keyword student-name) :laundry])
           :let [position (swap! x inc)]]
-        (hash-map :serial-number position, 
-                  :laundry-name "Laundry", 
+        (hash-map :serial-number position,
+                  :laundry-name "Laundry",
                   :laundry-cost (get all-laundry :laundry-cost)))))
 
 
