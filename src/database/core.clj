@@ -1,13 +1,15 @@
 (ns database.core
+  (:require [clojure.java.io :as io]
+            [clojure.data.json :as json]
+            [config :as config])
   (:gen-class))
-
-(require '[clojure.java.io :as io])
-(require '[clojure.data.json :as json])
 
 (declare save)
 
 (def all-course-data (atom {}))
-(def file-path "data.json")
+
+(defn json-path []
+  (config/lookup :json-path))
 
 (defn empty-data! []
   (reset! all-course-data {}))
@@ -109,7 +111,6 @@
                   :purchase-name (get all-purchases :purchase-name),
                   :purchase-cost (get all-purchases :purchase-cost)))))
 
-
 (defn laundry-list
   [course-name student-name]
   (let [x (atom 0)]
@@ -119,13 +120,11 @@
                   :laundry-name "Laundry",
                   :laundry-cost (get all-laundry :laundry-cost)))))
 
-
 (defn all-student-names
   [course-name]
   (sort (keys (get-in @all-course-data [(keyword course-name) :students]))))
 
-
-(defn main
+(defn init
     []
-    (if (.exists (io/as-file file-path))
-        (reset! all-course-data (json/read-str (slurp file-path) :key-fn keyword))))
+    (if (.exists (io/as-file (json-path)))
+      (reset! all-course-data (json/read-str (slurp (json-path)) :key-fn keyword))))
