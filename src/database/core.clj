@@ -33,7 +33,6 @@
 
 (defn add-student
   [course-name student-name room-num seat-num]
-  ;; TODO: check that course-name actually exists, otherwise error (this is very, very optional)
   (let [student {:name student-name
                  :room room-num,
                  :seat seat-num,
